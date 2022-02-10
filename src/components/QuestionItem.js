@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
-function QuestionItem({ question }) {
+function QuestionItem({ question, questions, setQuestions }) {
   const { id, prompt, answers, correctIndex } = question;
+  const [status, setStatus] = useState('')
 
   const options = answers.map((answer, index) => (
     <option key={index} value={index}>
       {answer}
     </option>
   ));
+
+  const deleteLink = "http://localhost:4000/questions/" + question.id
+
+  const handleDelete = ()=>{
+    fetch(deleteLink, { method: 'DELETE' })
+    .then(() => console.log('Delete successful'));
+    setQuestions(questions.filter((item)=>{return item !== question}))
+  }
 
   return (
     <li>
@@ -17,7 +26,7 @@ function QuestionItem({ question }) {
         Correct Answer:
         <select defaultValue={correctIndex}>{options}</select>
       </label>
-      <button>Delete Question</button>
+      <button onClick = {handleDelete}>Delete Question</button>
     </li>
   );
 }
